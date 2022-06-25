@@ -6,11 +6,11 @@ const generateMessage = (username, text) => {
     };
 };
 
-const generateLocationMessage = (url) => {
-    return {
-        url,
-        createdAt: new Date().getTime(),
-    };
-};
+// const generateLocationMessage = (url) => {
+//     return {
+//         url,
+//         createdAt: new Date().getTime(),
+//     };
+// };
 
-export { generateMessage, generateLocationMessage };
+export { generateMessage };

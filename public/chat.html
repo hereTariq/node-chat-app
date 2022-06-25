@@ -2,162 +2,51 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+            integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="css/style.css" />
         <title>Chat App</title>
     </head>
-    <body class="">
-        <div class="container mx-auto">
-            <div class="min-w-full border rounded md:grid md:grid-cols-3">
-                <!-- sidebar -->
-                <div id="sidebar"></div>
-                <!-- sidebar end -->
-
-                <!-- message box -->
-                <div class="md:col-span-2">
-                    <div class="w-full">
-                        <div
-                            class="relative w-full p-6 md:overflow-y-auto h-[40rem]"
-                            id="messages"
-                        ></div>
-
-                        <!-- input box -->
-                        <form
-                            id="form"
-                            action=""
-                            method=""
-                            class="flex fixed bottom-14 items-center justify-between w-[60%] p-3 md:border-t md:border-gray-300"
-                        >
-                            <!-- <button>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-6 h-6 text-gray-500"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    />
-                                </svg>
-                            </button>
-                            <button>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-5 h-5 text-gray-500"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                                    />
-                                </svg>
-                            </button> -->
-
-                            <input
-                                type="text"
-                                placeholder="Message"
-                                required
-                                class="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-md outline-none focus:text-gray-700"
-                                name="message"
-                                autocomplete="off"
-                                autofocus
-                            />
-                            <!-- <button>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-5 h-5 text-gray-500"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                                    />
-                                </svg>
-                            </button> -->
-                            <button>
-                                <svg
-                                    class="w-8 text-gray-500 origin-center transform rotate-90 text-blue-900"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
-                                    />
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
+    <body>
+        <div class="chat-container">
+            <header class="chat-header">
+                <h1>Chat</h1>
+                <a href="index.html" class="btn">Leave</a>
+            </header>
+            <main class="chat-main">
+                <div class="chat-sidebar">
+                    <h3><i class="fas fa-comments"></i> Room Name</h3>
+                    <h2 id="room-name">Main</h2>
+                    <h3><i class="fas fa-users"></i> Users</h3>
+                    <ul id="users"></ul>
                 </div>
+                <div class="chat-messages"></div>
+            </main>
+            <div class="chat-form-container">
+                <form id="chat-form">
+                    <input
+                        id="msg"
+                        type="text"
+                        placeholder="Enter Message"
+                        required
+                        autocomplete="off"
+                        autofocus
+                    />
+                    <button class="btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
             </div>
         </div>
-
-        <script id="message-template" type="text/html">
-            <div
-                class="font-mono mb-4 rounded-md w-fit shadow bg-gray-100 px-4 py-2 chatMessages"
-            >
-                <p class="font-bold text-green-500 pb-1 capitalize">
-                    {{username}}
-                </p>
-                <p>
-                    <span class="antialiased">{{message}}</span>
-                    <sub class="text-xs ml-2">{{createdAt}}</sub>
-                </p>
-            </div>
-        </script>
-
-        <script id="sidebar-template" type="text/html">
-            <div
-                class="capitalize border-r border-gray-300 bg-gray-600 lg:col-span-1 hidden md:block"
-            >
-                <h1
-                    class="my-2 mb-2 text-xl font-bold text-gray-600 bg-gray-100 p-2"
-                >
-                    {{room}}
-                </h1>
-                <h2 class="ml-2 text-lg font-bold text-white py-4">Users</h2>
-                <ul class="overflow-auto h-[32rem]">
-                    {{#users}}
-                    <li>
-                        <div class="w-full ">
-                            <div class="flex justify-between">
-                                <span
-                                    class="block font-semibold pl-10 border-collapse border border-gray-400 text-gray-300 w-full px-4 py-4"
-                                    >{{username}}</span
-                                >
-                            </div>
-                        </div>
-                    </li>
-                    {{/users}}
-                </ul>
-            </div>
-        </script>
-        <!-- <script id="location-template" type="text/html">
-            <div>
-                <p>
-                    {{createdAt}} -
-                    <a href="{{url}}" target="_blank" class="text-blue-900 underline">My current location</a>
-                </p>
-            </div>
-        </script> -->
 
         <!-- scripts mustache,moment and qs -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.10.5/qs.min.js"></script>
-        <script src="https://unpkg.com/mustache@latest"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/chat-app.js"></script>
     </body>

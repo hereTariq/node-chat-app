@@ -1,14 +1,14 @@
 const socket = io();
 
-const form = document.getElementById('form');
+const form = document.getElementById('chat-form');
 const formInput = form.querySelector('input');
 const formInputButton = form.querySelector('button');
 // const shareLocationButton = document.getElementById('share-location');
-const messages = document.getElementById('messages');
-
+const messages = document.querySelector('.chat-messages');
+const userList = document.getElementById('users');
 // templates
-const messageTemplate = document.getElementById('message-template').innerHTML;
-const sidebarTemplate = document.getElementById('sidebar-template').innerHTML;
+// const messageTemplate = document.getElementById('message-template').innerHTML;
+// const sidebarTemplate = document.getElementById('sidebar-template').innerHTML;
 // const locationTemplate = document.getElementById('location-template').innerHTML;
 
 const { username, room } = Qs.parse(location.search, {
@@ -16,36 +16,27 @@ const { username, room } = Qs.parse(location.search, {
 });
 
 const autoscroll = () => {
-    const len = document.getElementsByClassName('chatMessages').length;
-    document.getElementsByClassName('chatMessages')[len - 1].scrollIntoView();
+    messages.scrollTop = messages.scrollHeight;
 };
 
 socket.on('message', (message) => {
-    const html = Mustache.render(messageTemplate, {
-        username: message.username,
-        message: message.text,
-        createdAt: moment(message.createdAt).format('h:mm a'),
-    });
-    messages.insertAdjacentHTML('beforeend', html);
+    const div = document.createElement('div');
+    div.classList.add('message');
+    div.innerHTML = `<p class="meta">${message.username}<span>${moment(
+        message.createdAt
+    ).format('h:mm a')}</span></p>
+    <p class="text">${message.text}</p>`;
+    document.querySelector('.chat-messages').appendChild(div);
     autoscroll();
 });
 
 socket.on('roomData', ({ room, users }) => {
-    const html = Mustache.render(sidebarTemplate, {
-        room,
-        users,
-    });
-    document.getElementById('sidebar').innerHTML = html;
-});
-// socket.on('locationMessage', (location) => {
-//     const mapLink = Mustache.render(locationTemplate, {
-//         url: location.url,
-//         createdAt: moment(location.createdAt).format('h:mm a'),
-//     });
-//     messages.insertAdjacentHTML('beforeend', mapLink);
-// });
+    document.getElementById('room-name').innerText = room;
 
-// focus events don't bubble, must use capture phase
+    userList.innerHTML = `${users
+        .map((user) => `<li>${user.username}</li>`)
+        .join('')}`;
+});
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -64,21 +55,6 @@ form.addEventListener('submit', (e) => {
         formInput.focus();
     });
 });
-
-// shareLocationButton.addEventListener('click', () => {
-//     if (!navigator.geolocation) {
-//         return alert('geolocation is not supported by your browser');
-//     }
-//     shareLocationButton.disabled = true;
-
-//     navigator.geolocation.getCurrentPosition((position) => {
-//         const { latitude, longitude } = position.coords;
-//         socket.emit('shareLocation', { latitude, longitude }, () => {
-//             shareLocationButton.disabled = false;
-//             console.log('location shared!');
-//         });
-//     });
-// });
 
 socket.emit('join', { username, room }, (error) => {
     if (error) {

@@ -4,7 +4,7 @@ import express from 'express';
 import path from 'path';
 import http from 'http';
 import { Server } from 'socket.io';
-import { generateLocationMessage, generateMessage } from './utils/messages.js';
+import { generateMessage } from './utils/messages.js';
 import { addUser, removeUser, getUser, getUsersInRoom } from './utils/users.js';
 
 const app = express();
@@ -34,7 +34,10 @@ io.on('connection', (socket) => {
             .to(user.room)
             .emit(
                 'message',
-                generateMessage('Admin', `${user.username} has joined!`)
+                generateMessage(
+                    'Admin',
+                    `${user.username} has joined the room!`
+                )
             );
 
         io.to(user.room).emit('roomData', {
@@ -56,22 +59,12 @@ io.on('connection', (socket) => {
         callback();
     });
 
-    // socket.on('shareLocation', (location, callbaack) => {
-    //     io.emit(
-    //         'locationMessage',
-    //         generateLocationMessage(
-    //             `https://google.com/maps?q=${location.latitude},${location.longitude}`
-    //         )
-    //     );
-    //     callbaack();
-    // });
-
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
         if (user) {
             io.to(user.room).emit(
                 'message',
-                generateMessage('Admin', `${user.username} has left!`)
+                generateMessage('Admin', `${user.username} has left the room!`)
             );
 
             io.to(user.room).emit('roomData', {
